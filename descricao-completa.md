@@ -13,7 +13,7 @@ E o que você deve implementar? Essa é a melhor parte. Faça seu cadastro no Ba
 
 ## Critérios de aceitação
 
-* Crie um backlog com as tarefas antes de qualquer coisa. Aqui é um exercício de imaginação e ele é muito importante para a escrita de código de qualidade. A ideia é que você derive tudo que precisa ser feito para habilitar o checkout (sim, aqui é para você treinar a habilidade de triturar requisitos).
+* Crie um backlog com as tarefas antes de qualquer coisa. Aqui é um exercício de imaginação e ele é muito importante para a escrita de código de qualidade. 
 * 80% ou mais de cobertura de código cobrindo todos os caminhos
 * Funcionalidades implementadas devem ser suportar o que Basecamp oferece
 
