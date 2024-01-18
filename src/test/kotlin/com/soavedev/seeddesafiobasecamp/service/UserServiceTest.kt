@@ -63,7 +63,7 @@ class UserServiceTest {
     fun `when try to update a non-existing user, should throw NotFoundException`() {
         `when`(userRepository.findById(UUID.fromString(randomUUID))).thenReturn(Optional.empty())
         assertThrows<NotFoundException> {
-            userService.updateUser(userDefault)
+            userService.updateUser(userDefault, randomUUID)
         }
     }
 
