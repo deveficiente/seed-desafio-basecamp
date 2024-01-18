@@ -1,6 +1,7 @@
 package com.soavedev.seeddesafiobasecamp.service
 
 import com.soavedev.seeddesafiobasecamp.domain.entity.User
+import com.soavedev.seeddesafiobasecamp.domain.exceptions.BadRequestException
 import com.soavedev.seeddesafiobasecamp.domain.exceptions.EntityAlreadyExistsException
 import com.soavedev.seeddesafiobasecamp.domain.exceptions.NotFoundException
 import com.soavedev.seeddesafiobasecamp.domain.repository.UserRepository
@@ -22,9 +23,14 @@ class UserService @Autowired constructor(
         return userRepository.save(user)
     }
 
-    fun updateUser(user: User): User {
+    fun updateUser(user: User, userId: String): User {
         logger.debug { "Updating User with id [${user.id}]..." }
-        getUserById(user.id.toString())
+
+        if (userId != user.id.toString()) {
+            throw BadRequestException("User id does not match informed user")
+        }
+
+        getUserById(userId)
         return userRepository.save(user)
     }
 
@@ -34,7 +40,7 @@ class UserService @Autowired constructor(
     }
 
     fun getUserById(userId: String): User {
-        logger.debug { "Getting user with if [$userId]" }
+        logger.debug { "Getting user with id [$userId]" }
         return userRepository
                 .findById(UUID.fromString(userId))
                 .orElseThrow{ NotFoundException("User $userId was not found") }
