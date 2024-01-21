@@ -1,6 +1,9 @@
 spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: non_null
   jpa:
     show-sql: true
     generate-ddl: true
@@ -17,4 +20,5 @@ logging:
   level:
     root: WARN
     com.soavedev.seeddesafiobasecamp: DEBUG
+    com.soavedev.seeddesafiobasecamp.service: TRACE
     org.springframework.web.client.RestTemplate: ERROR

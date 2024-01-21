@@ -27,7 +27,7 @@ class UserDTOTest {
 
     @Test
     fun `when name is empty, should return message on validator`() {
-        var messageExpected = "name must be informed"
+        val messageExpected = "name must be informed"
 
         userDefault.name = ""
 
@@ -41,7 +41,7 @@ class UserDTOTest {
 
     @Test
     fun `when name has more than 50 bytes, should return message on validator`() {
-        var messageExpected = "name must have max of 50 characters"
+        val messageExpected = "name must have max of 50 characters"
 
         userDefault.name = "Esmeralda Constância da Silva Pereira Oliveira Santos Rodrigues da Cunha Gonzaga Souza Lima Almeida Costa Peregrino"
 
@@ -54,7 +54,7 @@ class UserDTOTest {
 
     @Test
     fun `when email is empty should return message on validator`() {
-        var messageExpected = "email must be informed"
+        val messageExpected = "email must be informed"
 
         userDefault.emailAddress = ""
 
@@ -67,7 +67,7 @@ class UserDTOTest {
 
     @Test
     fun `when email has a invalid format, should return message on validator`() {
-        var messageExpected = "email must be valid"
+        val messageExpected = "email must be valid"
 
         userDefault.emailAddress = "johnmayeratguitardotcom"
 

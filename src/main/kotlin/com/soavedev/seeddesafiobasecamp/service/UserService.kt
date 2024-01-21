@@ -30,7 +30,10 @@ class UserService @Autowired constructor(
             throw BadRequestException("User id does not match informed user")
         }
 
-        getUserById(userId)
+        val userBefore = getUserById(userId)
+
+        logger.trace { "User before: [$userBefore] | User after: [$user]" }
+
         return userRepository.save(user)
     }
 
