@@ -1,5 +1,6 @@
 package com.soavedev.seeddesafiobasecamp.controller.advice
 
+import com.soavedev.seeddesafiobasecamp.controller.BucketController
 import com.soavedev.seeddesafiobasecamp.controller.TaskController
 import com.soavedev.seeddesafiobasecamp.controller.UserController
 import org.springframework.http.ResponseEntity
@@ -18,7 +19,8 @@ private val logger = KotlinLogging.logger {}
 @ControllerAdvice(
         assignableTypes = [
             UserController::class,
-            TaskController::class
+            TaskController::class,
+            BucketController::class
         ],
 )
 class ControllerAdvice {

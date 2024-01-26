@@ -9,6 +9,7 @@ import com.soavedev.seeddesafiobasecamp.domain.enums.UserStatus
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
@@ -56,6 +57,15 @@ class UserMapperTest @Autowired constructor(
 
         assert(user.id.toString().isNotBlank())
 
+    }
+
+    @Test
+    fun `when some data is invalid, should thrown IllegalArgumentException`() {
+        userDtoDefault.name = ""
+
+        assertThrows<IllegalArgumentException> {
+            userMapper.toEntity(userDtoDefault)
+        }
     }
 
     private fun buildDefaultUserDTO(): UserDTO {
