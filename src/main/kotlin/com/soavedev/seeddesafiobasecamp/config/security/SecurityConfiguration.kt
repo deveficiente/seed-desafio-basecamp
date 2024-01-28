@@ -1,4 +1,4 @@
-package com.soavedev.seeddesafiobasecamp.config
+package com.soavedev.seeddesafiobasecamp.config.security
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean

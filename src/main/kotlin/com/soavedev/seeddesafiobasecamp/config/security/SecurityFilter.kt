@@ -1,4 +1,4 @@
-package com.soavedev.seeddesafiobasecamp.config
+package com.soavedev.seeddesafiobasecamp.config.security
 
 import com.soavedev.seeddesafiobasecamp.domain.repository.UserRepository
 import com.soavedev.seeddesafiobasecamp.service.TokenService
