@@ -1,0 +1,19 @@
+@startuml
+actor Client
+participant "login-controller" as loginController
+participant "authentication-manager" as authenticationManager
+participant "token-service" as tokenService
+database "MySQL" as DB_BASECAMP
+
+Activate loginController
+
+Client -> loginController : POST /login \nwith login and password
+loginController -> authenticationManager :
+authenticationManager -> DB_BASECAMP : get user details
+authenticationManager -> loginController :
+loginController -> tokenService : generate-token with user
+tokenService -> loginController : With new JWT Token generated
+loginController -> Client : HTTP 201 CREATED \nWith login, password and valid token
+
+Deactivate loginController
+@enduml

@@ -1,0 +1,19 @@
+@startuml
+actor Client
+participant "register-controller" as registerController
+participant "userMapper" as userMapper
+participant "user-service" as userService
+database "MySQL" as DB_BASECAMP
+
+Activate registerController
+Client -> registerController : POST /register
+registerController -> userMapper : from DTO to Entity
+registerController -> userService : with user entity
+userService -> userService : validate if login is already in use
+userService -> userService : validate if email is already in use
+userService -> DB_BASECAMP : save user with generated ID
+userService -> registerController : with ID generated
+registerController -> userMapper : from Entity to DTO
+registerController -> Client : HTTP 201 CREATED
+Deactivate registerController
+@enduml

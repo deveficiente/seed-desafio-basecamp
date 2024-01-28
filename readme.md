@@ -1,12 +1,14 @@
-# Por que este repositório existe ?
+# Dev Eficiente - Desafio Basecamp
 
-Ele existe apenas para que seja possível trackear mais facilmente todo mundo que topou implementar este desafio. 
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## Quem criou este desafio?
+## Description
 
-Este desafio é um dos treinos encontrados na [Jornada Dev Eficiente](https://deveficiente.com/). 
+This repository keep the code for dev-eficiente challenge, which consists in reproduce the basecamp features.
+With this project, you'll be able to:
+- Manage users with ROLES
+- Manage buckets (a.k.a. projects)
+- Manage tasks
+- Manage task groups
 
-## Descrição completa do desafio
-
-[Confira a descrição completa](/descricao-completa.md)
 
