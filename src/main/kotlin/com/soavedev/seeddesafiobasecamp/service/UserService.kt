@@ -7,6 +7,9 @@ import com.soavedev.seeddesafiobasecamp.domain.exceptions.NotFoundException
 import com.soavedev.seeddesafiobasecamp.domain.repository.UserRepository
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.security.crypto.bcrypt.BCrypt
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -20,6 +23,10 @@ class UserService @Autowired constructor(
     fun saveUser(user: User): User {
         logger.debug { "Saving User with id [${user.id}]..." }
         validateIfEmailAlreadyExists(user.emailAddress)
+        validateIdLoginAlreadyExists(user.login)
+
+        user.userPassword = BCryptPasswordEncoder().encode(user.userPassword)
+
         return userRepository.save(user)
     }
 
@@ -56,6 +63,18 @@ class UserService @Autowired constructor(
 
         if (user.isPresent){
             throw EntityAlreadyExistsException("User with  email [$emailAddress] already exists")
+        }
+    }
+
+    fun validateIdLoginAlreadyExists(login: String) {
+        logger.debug { "Searching user login [$login]..." }
+        try {
+            userRepository.findByLogin(login)
+        } catch (ex: EmptyResultDataAccessException){
+            logger.debug { "Login [$login] is available" }
+        } catch (ex: Exception){
+            logger.error { "Login [$login] is unavailable" }
+            throw EntityAlreadyExistsException("Login $login is not available, please choose another")
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.soavedev.seeddesafiobasecamp.domain.mapper
 
-import ch.qos.logback.classic.Level
-import ch.qos.logback.classic.joran.action.LevelAction
 import com.soavedev.seeddesafiobasecamp.domain.dto.UserDTO
 import com.soavedev.seeddesafiobasecamp.domain.entity.User
 import com.soavedev.seeddesafiobasecamp.domain.enums.UserRoles
@@ -10,12 +8,9 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.util.*
-import java.util.logging.Logger
 
 @SpringBootTest
 class UserMapperTest @Autowired constructor(
@@ -72,6 +67,8 @@ class UserMapperTest @Autowired constructor(
         return UserDTO(
                 id = UUID.randomUUID(),
                 name = "John Mayer",
+                login = "username",
+                userPassword = "some pass",
                 emailAddress = "johnmayer@guitar.com",
                 role = UserRoles.ADMIN,
                 status = UserStatus.ACTIVE,
@@ -85,8 +82,10 @@ class UserMapperTest @Autowired constructor(
         return User(
                 id = UUID.randomUUID(),
                 name = "John Mayer",
+                login = "username",
+                userPassword = "some pass",
                 emailAddress = "johnmayer@guitar.com",
-                role = UserRoles.ADMIN.name,
+                role = UserRoles.ADMIN,
                 status = UserStatus.ACTIVE.name,
                 location = "Los Angeles, CA",
                 shortBio = "Guitarrist and Taylor Swift ex",

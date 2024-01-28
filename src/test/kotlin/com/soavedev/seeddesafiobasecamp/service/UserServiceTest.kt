@@ -6,6 +6,7 @@ import com.soavedev.seeddesafiobasecamp.domain.enums.UserStatus
 import com.soavedev.seeddesafiobasecamp.domain.exceptions.EntityAlreadyExistsException
 import com.soavedev.seeddesafiobasecamp.domain.exceptions.NotFoundException
 import com.soavedev.seeddesafiobasecamp.domain.repository.UserRepository
+import com.soavedev.seeddesafiobasecamp.utils.DefaultBuilders
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -32,7 +33,7 @@ class UserServiceTest {
     @BeforeEach
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        userDefault = buildDefaultUserEntity()
+        userDefault = DefaultBuilders.buildDefaultUserEntity()
     }
 
     @Test
@@ -92,18 +93,5 @@ class UserServiceTest {
         assertThrows<NotFoundException> {
             userService.getUserById(randomUUID)
         }
-    }
-
-    private fun buildDefaultUserEntity(): User {
-        return User(
-                id = UUID.fromString(randomUUID),
-                name = "John Mayer",
-                emailAddress = "johnmayer@guitar.com",
-                role = UserRoles.ADMIN.name,
-                status = UserStatus.ACTIVE.name,
-                location = "Los Angeles, CA",
-                shortBio = "Guitarrist and Taylor Swift ex",
-                profilePictureUrl = "blablabla"
-        )
     }
 }

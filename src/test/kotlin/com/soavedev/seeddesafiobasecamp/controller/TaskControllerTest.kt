@@ -6,7 +6,10 @@ import com.soavedev.seeddesafiobasecamp.domain.dto.TaskDTO
 import com.soavedev.seeddesafiobasecamp.domain.entity.Task
 import com.soavedev.seeddesafiobasecamp.domain.enums.TaskStatus
 import com.soavedev.seeddesafiobasecamp.domain.repository.TaskRepository
+import com.soavedev.seeddesafiobasecamp.domain.repository.UserRepository
 import com.soavedev.seeddesafiobasecamp.service.TaskService
+import com.soavedev.seeddesafiobasecamp.service.TokenService
+import com.soavedev.seeddesafiobasecamp.utils.DefaultBuilders
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -33,16 +36,22 @@ private const val BASE_ENDPOINT = "/tasks"
 @AutoConfigureMockMvc
 class TaskControllerTest @Autowired constructor(
         @MockBean val taskRepository: TaskRepository,
+        @MockBean val userRepository: UserRepository,
+        val tokenService: TokenService,
         val objectMapper: ObjectMapper,
         val mockMvc: MockMvc
 ) {
     private var someUUID = "6cb8d49c-6b07-4b69-8e5f-4c5b50115ee1"
-    private val defaultRequest = buildTaskDTO()
-    private val taskEntity = buildTaskEntity()
+    private val defaultRequest = DefaultBuilders.buildTaskDTO()
+    private val taskEntity = DefaultBuilders.buildTaskEntity()
+    private val user = DefaultBuilders.buildDefaultUserEntity()
+    private lateinit var jwtToken: String
 
     @BeforeEach
     fun setup() {
         MockitoAnnotations.openMocks(this)
+        `when`(userRepository.findByLogin(user.login)).thenReturn(user)
+        jwtToken = tokenService.generateToken(user)
     }
 
     @Test
@@ -51,6 +60,7 @@ class TaskControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 post(BASE_ENDPOINT)
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(defaultRequest))
         ).andReturn()
@@ -67,6 +77,7 @@ class TaskControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 post(BASE_ENDPOINT)
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(defaultRequest))
         ).andReturn()
@@ -83,6 +94,7 @@ class TaskControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 post(BASE_ENDPOINT)
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(defaultRequest))
         ).andReturn()
@@ -99,6 +111,7 @@ class TaskControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 put(BASE_ENDPOINT)
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(defaultRequest))
         ).andReturn()
@@ -113,6 +126,7 @@ class TaskControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 get(BASE_ENDPOINT)
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andReturn()
 
@@ -126,6 +140,7 @@ class TaskControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 get("$BASE_ENDPOINT/$someUUID")
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andReturn()
 
@@ -139,39 +154,11 @@ class TaskControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 get("$BASE_ENDPOINT/$someUUID")
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andReturn()
 
         assertNotNull(result)
         assertEquals(HttpStatus.NOT_FOUND.value(), result.response.status)
-    }
-
-    private fun buildTaskEntity(): Task {
-        return Task(
-                id = UUID.fromString(someUUID),
-                name = "Example Task",
-                startDate = LocalDateTime.now(),
-                finishDate = LocalDateTime.now().plusDays(7),
-                status =TaskStatus.BACKLOG.name,
-                notes = "This is a sample task",
-                userAssignId = "6cb8d49c-6b07-4b69-8e5f-4c5b50115ee1",
-                userNotifyId = "6cb8d49c-6b07-4b69-8e5f-4c5b50115ee1",
-                bucketId = "6cb8d49c-6b07-4b69-8e5f-4c5b50115ee1",
-                bucket = null
-        )
-    }
-
-    private fun buildTaskDTO(): TaskDTO {
-        return TaskDTO(
-                id = UUID.fromString(someUUID),
-                name = "New task",
-                startDate = LocalDateTime.now(),
-                finishDate = LocalDateTime.now(),
-                status = TaskStatus.BACKLOG,
-                notes = "Some notes on my task",
-                userAssignId = UUID.randomUUID(),
-                userNotifyId = UUID.randomUUID(),
-                bucketId = "6cb8d49c-6b07-4b69-8e5f-4c5b50115ee1"
-        )
     }
 }

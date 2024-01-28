@@ -82,6 +82,8 @@ class UserDTOTest {
         return UserDTO(
                 id = UUID.randomUUID(),
                 name = "John Mayer",
+                login = "username",
+                userPassword = "some pass",
                 emailAddress = "johnmayer@guitar.com",
                 role = UserRoles.ADMIN,
                 status = UserStatus.ACTIVE,

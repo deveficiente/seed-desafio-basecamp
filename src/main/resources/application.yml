@@ -22,3 +22,4 @@ logging:
     com.soavedev.seeddesafiobasecamp: DEBUG
     com.soavedev.seeddesafiobasecamp.service: TRACE
     org.springframework.web.client.RestTemplate: ERROR
+    org.springframework.security: DEBUG

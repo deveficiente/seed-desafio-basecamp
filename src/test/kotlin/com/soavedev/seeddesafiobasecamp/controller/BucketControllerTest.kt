@@ -5,6 +5,9 @@ import com.jayway.jsonpath.JsonPath
 import com.soavedev.seeddesafiobasecamp.domain.dto.BucketDTO
 import com.soavedev.seeddesafiobasecamp.domain.entity.Bucket
 import com.soavedev.seeddesafiobasecamp.domain.repository.BucketRepository
+import com.soavedev.seeddesafiobasecamp.domain.repository.UserRepository
+import com.soavedev.seeddesafiobasecamp.service.TokenService
+import com.soavedev.seeddesafiobasecamp.utils.DefaultBuilders
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -19,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -31,17 +35,23 @@ private const val BASE_ENDPOINT = "/buckets"
 @AutoConfigureMockMvc
 class BucketControllerTest @Autowired constructor(
         @MockBean val bucketRepository: BucketRepository,
+        @MockBean val userRepository: UserRepository,
+        val tokenService: TokenService,
         val objectMapper: ObjectMapper,
         val mockMvc: MockMvc
 ) {
 
     private val someUUID = "6cb8d49c-6b07-4b69-8e5f-4c5b50115ee1"
-    private val defaultRequest = buildBucketDto()
-    private val bucketEntity = buildBucketEntity()
+    private val defaultRequest = DefaultBuilders.buildBucketDto()
+    private val bucketEntity = DefaultBuilders.buildBucketEntity()
+    private val user = DefaultBuilders.buildDefaultUserEntity()
+    private lateinit var jwtToken: String
 
     @BeforeEach
     fun setup() {
         MockitoAnnotations.openMocks(this)
+        `when`(userRepository.findByLogin(user.login)).thenReturn(user)
+        jwtToken = tokenService.generateToken(user)
     }
 
     @Test
@@ -50,6 +60,7 @@ class BucketControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 post(BASE_ENDPOINT)
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(defaultRequest))
         ).andReturn()
@@ -65,6 +76,7 @@ class BucketControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 post(BASE_ENDPOINT)
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(defaultRequest))
         ).andReturn()
@@ -81,6 +93,7 @@ class BucketControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 post(BASE_ENDPOINT)
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(defaultRequest))
         ).andReturn()
@@ -97,6 +110,7 @@ class BucketControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 post(BASE_ENDPOINT)
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(defaultRequest))
         ).andReturn()
@@ -117,6 +131,7 @@ class BucketControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 post(BASE_ENDPOINT)
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(defaultRequest))
         ).andReturn()
@@ -133,6 +148,7 @@ class BucketControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 MockMvcRequestBuilders.put(BASE_ENDPOINT)
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(defaultRequest))
         ).andReturn()
@@ -147,6 +163,7 @@ class BucketControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 MockMvcRequestBuilders.get(BASE_ENDPOINT)
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andReturn()
 
@@ -160,6 +177,7 @@ class BucketControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("$BASE_ENDPOINT/$someUUID")
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andReturn()
 
@@ -173,34 +191,11 @@ class BucketControllerTest @Autowired constructor(
 
         val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("$BASE_ENDPOINT/$someUUID")
+                        .header("Authorization", "Bearer $jwtToken")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andReturn()
 
         assertNotNull(result)
         assertEquals(HttpStatus.NOT_FOUND.value(), result.response.status)
-    }
-
-    private fun buildBucketDto(): BucketDTO {
-        return BucketDTO(
-                id = UUID.fromString(someUUID),
-                name = "Some name",
-                description = "Some description",
-                createdBy = "Some user",
-                startDate = LocalDateTime.now(),
-                endDate = LocalDateTime.now(),
-                taskIds = emptyList(),
-        )
-    }
-
-    private fun buildBucketEntity(): Bucket {
-        return Bucket(
-                id = UUID.fromString(someUUID),
-                name = "Some name",
-                description = "Some description",
-                createdBy = "Some user",
-                startDate = LocalDateTime.now(),
-                endDate = LocalDateTime.now(),
-                tasks = emptyList(),
-        )
     }
 }

@@ -1,5 +1,6 @@
 package com.soavedev.seeddesafiobasecamp.controller.advice
 
+import com.soavedev.seeddesafiobasecamp.controller.AuthController
 import com.soavedev.seeddesafiobasecamp.controller.BucketController
 import com.soavedev.seeddesafiobasecamp.controller.TaskController
 import com.soavedev.seeddesafiobasecamp.controller.UserController
@@ -10,6 +11,8 @@ import com.soavedev.seeddesafiobasecamp.domain.exceptions.EntityAlreadyExistsExc
 import com.soavedev.seeddesafiobasecamp.domain.exceptions.NotFoundException
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
+import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.security.authentication.InternalAuthenticationServiceException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -20,7 +23,8 @@ private val logger = KotlinLogging.logger {}
         assignableTypes = [
             UserController::class,
             TaskController::class,
-            BucketController::class
+            BucketController::class,
+            AuthController::class
         ],
 )
 class ControllerAdvice {
@@ -87,6 +91,32 @@ class ControllerAdvice {
                         exception.message,
                 ),
                 HttpStatus.NOT_FOUND,
+        )
+    }
+
+    @ExceptionHandler(BadCredentialsException::class)
+    fun handleNotFoundException(exception: BadCredentialsException): ResponseEntity<ErrorResponse> {
+        logger.error("Handling BadCredentialsException: ${exception.message}", exception)
+        return ResponseEntity(
+                ErrorResponse(
+                        HttpStatus.FORBIDDEN.reasonPhrase,
+                        HttpStatus.FORBIDDEN.value(),
+                        exception.message,
+                ),
+                HttpStatus.FORBIDDEN,
+        )
+    }
+
+    @ExceptionHandler(InternalAuthenticationServiceException::class)
+    fun handleNotFoundException(exception: InternalAuthenticationServiceException): ResponseEntity<ErrorResponse> {
+        logger.error("Handling InternalAuthenticationServiceException: ${exception.message}", exception)
+        return ResponseEntity(
+                ErrorResponse(
+                        HttpStatus.BAD_REQUEST.reasonPhrase,
+                        HttpStatus.BAD_REQUEST.value(),
+                        "User was not found",
+                ),
+                HttpStatus.BAD_REQUEST,
         )
     }
 

@@ -29,8 +29,10 @@ class UserMapper: Mapper<UserDTO, User> {
         return User(
                 id = domain.id!!,
                 name = domain.name,
+                login = domain.login,
+                userPassword = domain.userPassword,
                 emailAddress = domain.emailAddress,
-                role = domain.role.name,
+                role = domain.role,
                 location = domain.location,
                 status = domain.status.name,
                 shortBio = domain.shortBio,
@@ -42,8 +44,10 @@ class UserMapper: Mapper<UserDTO, User> {
         return UserDTO(
                 id = entity.id,
                 name = entity.name,
+                login = entity.login,
+                userPassword = "*******************",
                 emailAddress = entity.emailAddress,
-                role = UserRoles.valueOf(entity.role),
+                role = entity.role,
                 status = UserStatus.valueOf(entity.status),
                 location = entity.location,
                 shortBio = entity.shortBio,

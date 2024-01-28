@@ -16,6 +16,12 @@ data class UserDTO(
         @field:Size(max = 50, message = "name must have max of 50 characters")
         var name: String,
 
+        @field:NotEmpty(message = "login must be informed")
+        var login: String,
+
+        @field:NotEmpty(message = "password must be informed")
+        var userPassword: String,
+
         @field:Email(message = "email must be valid")
         @field:NotEmpty(message = "email must be informed")
         var emailAddress: String,
